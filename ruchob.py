@@ -1,7 +1,13 @@
+# import json
+
 osrodki = {
     "powietrze": 343,
     "woda": 1500
 }
+# tab_js = json.dumps(osrodki)
+# with open('save.json', 'w') as f:
+#     f.write(tab_js)
+
 
 osr = input("Podaj nazwe osrodka lub predkosc dzwieku w osrodku: ")
 f = input("Podaj czestotliwosc emisji: ")

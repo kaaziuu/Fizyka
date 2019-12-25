@@ -5,7 +5,7 @@ osrodki = {
 
 print("Obslugiwane osrodki to:")
 for name in osrodki:
-    print (name)
+    print(name)
 
 n = input("Podaj ilosc dokonanych pomiarow: ")
 osr = input("Podaj nazwe osrodka lub predkosc dzwieku w osrodku: ")
@@ -13,6 +13,7 @@ inter = input("Podaj okres fali: ")
 
 if osr in osrodki:
     osr = osrodki[osr]
+
 
 def licz(t, osr):
     x = osr * t/2
@@ -28,7 +29,7 @@ while (i < int(n)):
     czasy.append(float(t))
     x = licz(float(t), float(osr))
     odleg.append(x)
-    i+=1
+    i += 1
 
 j = 0
 while j < int(n)-1:
