@@ -43,7 +43,7 @@ class App(Frame):
         btn3 = Button(frame, text='olbicz odleglosc', width=20, command=self.how_far)
         btn3.grid(row=2, column=0)
 
-        btn4 = Button(frame, text='oblicz predkosc detektora', width=20)
+        btn4 = Button(frame, text='oblicz predkosc detektora', width=20, command=self.detector_speed)
         btn4.grid(row=3, column=0)
 
         btn5 = Button(frame, text="nie wiem co to robi XD", width=20)
@@ -126,12 +126,12 @@ class App(Frame):
         frame = Frame(self.main_frame)
         self.show_centers(other_frame=frame, show_mode=True)
 
-        lb_1 = Label(frame, text="Podaj czas po ktorym dzwiek powrocil do zrodla w s: ")
+        lb_1 = Label(frame, text="Podaj czas po ktorym\n dzwiek powrocil do zrodla w s: ")
         lb_1.grid(row=1, column=0)
         time = Entry(frame)
         time.grid(row=1, column=1)
 
-        lb_2 = Label(frame, text="Podaj nazwe osrodka lub predkosc dzwieku w osrodku: ")
+        lb_2 = Label(frame, text="Podaj nazwe osrodka\n lub predkosc dzwieku w osrodku: ")
         lb_2.grid(row=2, column=0)
         center = Entry(frame)
         center.grid(row=2, column=1)
@@ -148,17 +148,61 @@ class App(Frame):
             result_label = Label(frame, text=f'Odleglosc wynosi: {result}')
             result_label.grid(row=5, column=0, columnspan=2, sticky=EW)
 
-        frame.pack()
+        exit_btn = Button(frame, text='powrot', command=self.main_view)
+        exit_btn.grid(row=6, column=0, columnspan=2, sticky=EW)
 
+        frame.pack()
 
     # oblicznie odleglosci
     def how_far_result(self, time, center):
+        center = self.center_speed(center)
+        time = float(time)
+        return h_f(time, center)
+
+    def center_speed(self, center):
         if center in self.centers.keys():
             center = self.centers[center]
         else:
             center = float(center)
-        time = float(time)
-        return h_f(time, center)
+
+        return center
+
+    def detector_speed(self, show_result=False, **kwargs):
+        self.cls()
+        frame = Frame(self.main_frame)
+        self.show_centers(other_frame=frame, show_mode=True)
+
+        lb_1 = Label(frame, text="Podaj czestotliwosc emisji: ")
+        lb_1.grid(row=1, column=0)
+        frequency_s = Entry(frame)
+        frequency_s.grid(row=1, column=1)
+
+        lb_2 = Label(frame, text="Podaj nazwe osrodka\n lub predkosc dzwieku w osrodku: ")
+        lb_2.grid(row=2, column=0)
+        center = Entry(frame)
+        center.grid(row=2, column=1)
+
+        lb_3 = Label(frame, text="Podaj czestotliwosc zwrotna: ")
+        lb_3.grid(row=3, column=0)
+        frequency_e = Entry(frame)
+        frequency_e.grid(row=3, column=1)
+
+        btn = Button(frame, text='licz', command=lambda: self.detector_speed(show_result=True, frequency_s=frequency_s.get(), frequency_e=frequency_e.get(), center=center.get()))
+        btn.grid(row=4, column=0, columnspan=2)
+
+        result_lb = Label(frame, text='wynik: ')
+        result_lb.grid(row=5, column=0, columnspan=2, sticky=EW)
+
+        if show_result:
+            kwargs['center'] = self.center_speed(kwargs['center'])
+            result = p_d(kwargs['center'], float(kwargs['frequency_s']), float(kwargs['frequency_e']))
+            rst = Label(frame, text=f"Predkosc detektora wynosi: {result} m/s")
+            rst.grid(row=6, column=0, columnspan=2, sticky=EW)
+
+        exit_btn = Button(frame, text='powrot', command=self.main_view)
+        exit_btn.grid(row=7, column=0, columnspan=2, sticky=EW)
+
+
 
 
 if __name__ == '__main__':
