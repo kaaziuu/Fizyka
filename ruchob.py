@@ -16,6 +16,7 @@
 # if osr in osrodki:
 #     osr = osrodki[osr]
 
+
 def licz(osr, f, f1):
     vo = (osr*f1)/f - osr
     return vo

@@ -2,6 +2,7 @@ from tkinter import *
 import json
 from old import licz as h_f
 from ruchob import licz as p_d
+from w_mainv2 import calculations as calc
 
 class App(Frame):
     def __init__(self, master):
@@ -46,7 +47,7 @@ class App(Frame):
         btn4 = Button(frame, text='oblicz predkosc detektora', width=20, command=self.detector_speed)
         btn4.grid(row=3, column=0)
 
-        btn5 = Button(frame, text="nie wiem co to robi XD", width=20)
+        btn5 = Button(frame, text="nie wiem co to robi XD", width=20, command=self.calculations_p1)
         btn5.grid(row=4, column=0)
         frame.pack()
 
@@ -202,8 +203,73 @@ class App(Frame):
         exit_btn = Button(frame, text='powrot', command=self.main_view)
         exit_btn.grid(row=7, column=0, columnspan=2, sticky=EW)
 
+    def calculations_p1(self, how_many_oth = None, isUpdate = False):
+        self.cls()
+        frame = Frame(self.main_frame)
+        self.show_centers(other_frame=frame, show_mode=True)
+        how_many_lb = Label(frame, text='ilosc_pomiarow: ')
+        how_many_lb.grid(row=1, column=0)
+        how_many = Entry(frame)
+        how_many.grid(row=1, column=1, sticky=W)
+        btn = Button(frame, text='dalej', command=lambda: self.calculations_p1(how_many.get(), True))
+        btn.grid(row=2, column=0, columnspan=2, sticky=EW)
 
+        if isUpdate:
+            Label(frame, text='Podaj nazwe osrodka lub predkosc dzwieku w osrodku: ').grid(row=4, column=0)
+            center_entr = Entry(frame)
+            center_entr.grid(row=3, column=1)
 
+            Label(frame, text='Podaj okres fali: ').grid(row=4, column=0)
+            wave_entr = Entry(frame)
+            wave_entr.grid(row=4, column=1)
+
+            entrys = []
+            for i in range(how_many+1):
+                Label(frame, text=f"czas {i}").grid(row=i+5, column=0)
+                entry = Entry(frame)
+                entry.grid(row=i+3, column=0)
+                entrys.append(entry)
+
+            btn_calc = Button(frame, text='licz', command=lambda: self.calculations_p2(entrys, wave_entr.get(), center_entr.get()))
+            btn_calc.grid(row=98, column=0, columnspan=2, sticky=EW)
+        exit_btn = Button(frame, text='wroc', command=self.main_view)
+        exit_btn.grid(row=99, column=0)
+        frame.pack()
+
+    def calculations_p2(self, entrys, waves, center):
+        times = [time for time in entrys.get()]
+        center = self.center_speed(center)
+        data = calc(center, float(waves), times)
+        distansces = data[0]
+        speeds = data[1]
+        self.cls()
+        frame = Frame(self.main_frame)
+
+        scroll_1 = Scrollbar(Frame)
+        scroll_1.grid(row=1, column=1, sticky=W)
+        list_1 = Listbox(frame, yscrollcommand=scroll_1.set)
+        for i, time in enumerate(times):
+            list_1.insert(END, f"{i} - {times}")
+        list_1.grid(row=1, column=0)
+        scroll_1.config(command=list_1.yview())
+
+        scroll_2 = Scrollbar(Frame)
+        scroll_2.grid(row=1, column=3, sticky=W)
+        list_2 = Listbox(frame, yscrollcommand=scroll_2.set)
+        for i, speed in enumerate(speeds):
+            list_1.insert(END, f"{i} - {speed}")
+        list_2.grid(row=1, column=0)
+        scroll_2.config(command=list_2.yview())
+
+        scroll_3 = Scrollbar(Frame)
+        scroll_3.grid(row=0, column=1, sticky=W)
+        list_3 = Listbox(frame, yscrollcommand=scroll_3.set)
+        for i, dis in enumerate(distansces):
+            list_3.insert(END, f"{i} - {dis}")
+        list_3.grid(row=0, column=0)
+        scroll_3.config(command=list_3.yview())
+
+        frame.pack()
 
 if __name__ == '__main__':
     root = Tk()
