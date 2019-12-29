@@ -3,6 +3,7 @@ import json
 from calc import how_far as h_f
 from calc import detector_speed as p_d
 from calc import calculations as calc
+from calc import Hz
 
 class App(Frame):
     def __init__(self, master):
@@ -49,6 +50,10 @@ class App(Frame):
 
         btn5 = Button(frame, text="wiele pomiarow", width=20, command=self.calculations_p1)
         btn5.grid(row=4, column=0)
+
+        btn6 = Button(frame, text="czestotliwosc fali", width=20, command=self.Hz_calc)
+        btn6.grid(row=5, column=0)
+
         frame.pack()
 
     # pokazuje wszystkie zapisane osrodki
@@ -282,6 +287,50 @@ class App(Frame):
         agian_btn = Button(frame, text='powtorz', command=self.calculations_p1)
         agian_btn.grid(row=99, column=2, sticky=EW)
 
+
+        frame.pack()
+
+
+    def Hz_calc(self, is_result=False, **kwargs):
+        self.cls()
+        frame = Frame(self.main_frame)
+        self.show_centers(other_frame=frame, show_mode=True)
+
+        Label(frame, text="predkosc obserwatora").grid(row=1, column=0)
+        Label(frame, text="predkosc fali\n lub nazwa osrodka").grid(row=2, column=0)
+        Label(frame, text="dlugosc fali").grid(row=3, column=0)
+        Label(frame, text="czas dotarcia").grid(row=4, column=0)
+
+        observer_speed = Entry(frame)
+        observer_speed.grid(row=1, column=1)
+
+        center_entr = Entry(frame)
+        center_entr.grid(row=2, column=1)
+
+        lenght_wave = Entry(frame)
+        lenght_wave.grid(row=3, column=1)
+
+        time_entr = Entry(frame)
+        time_entr.grid(row=4, column=1)
+
+        btn = Button(frame, text='licz', command=lambda: self.Hz_calc(True,
+                                                                      observer_speed=observer_speed.get(),
+                                                                      center_entr=center_entr.get(),
+                                                                      lenght_wave=lenght_wave.get(),
+                                                        time_entr=time_entr.get()))
+
+        btn.grid(row=5, column=0, columnspan=2, sticky=EW)
+        if is_result:
+            kwargs['center_entr'] = self.center_speed(kwargs['center_entr'])
+            result = Hz(float(kwargs['observer_speed']),
+                        float(kwargs['center_entr']),
+                        float(kwargs['lenght_wave']),
+                        float(kwargs['time_entr']))
+
+            Label(frame, text=f'wynik to {result}').grid(row=6, column=0, columnspan=2)
+
+        exit_btn = Button(frame, text='wroc', command=self.main_view)
+        exit_btn.grid(row=99, column=0, sticky=EW)
 
         frame.pack()
 
