@@ -1,8 +1,8 @@
 from tkinter import *
 import json
-from old import licz as h_f
-from ruchob import licz as p_d
-from w_mainv2 import calculations as calc
+from calc import how_far as h_f
+from calc import detector_speed as p_d
+from calc import calculations as calc
 
 class App(Frame):
     def __init__(self, master):
@@ -197,11 +197,14 @@ class App(Frame):
         if show_result:
             kwargs['center'] = self.center_speed(kwargs['center'])
             result = p_d(kwargs['center'], float(kwargs['frequency_s']), float(kwargs['frequency_e']))
+            print(result)
             rst = Label(frame, text=f"Predkosc detektora wynosi: {result} m/s")
             rst.grid(row=6, column=0, columnspan=2, sticky=EW)
 
         exit_btn = Button(frame, text='powrot', command=self.main_view)
         exit_btn.grid(row=7, column=0, columnspan=2, sticky=EW)
+
+        frame.pack()
 
     def calculations_p1(self, how_many_oth = None, isUpdate = False):
         self.cls()
@@ -272,6 +275,13 @@ class App(Frame):
             list_3.insert(END, f"{i} - {dis}")
         list_3.grid(row=1, column=4)
         scroll_3.config(command=list_3.yview())
+
+        exit_btn = Button(frame, text='wroc', command=self.main_view)
+        exit_btn.grid(row=99, column=0, sticky=EW)
+
+        agian_btn = Button(frame, text='powtorz', command=self.calculations_p1)
+        agian_btn.grid(row=99, column=2, sticky=EW)
+
 
         frame.pack()
 
